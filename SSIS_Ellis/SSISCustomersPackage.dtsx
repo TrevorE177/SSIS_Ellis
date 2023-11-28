@@ -11,8 +11,8 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="SSISCustomersPackage"
   DTS:PackageType="5"
-  DTS:VersionBuild="49"
-  DTS:VersionGUID="{274E4483-B4B5-4D8E-94A4-F51505266854}">
+  DTS:VersionBuild="53"
+  DTS:VersionGUID="{0D9D8D91-9E31-497E-BBA0-19B3CCF33297}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -571,7 +571,7 @@
                 <property
                   dataType="System.Boolean"
                   description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
-                  name="FastLoadKeepNulls">false</property>
+                  name="FastLoadKeepNulls">true</property>
                 <property
                   dataType="System.String"
                   description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
@@ -635,7 +635,7 @@
                     <inputColumn
                       refId="Package\Upload Data\Customer_Followup.Inputs[OLE DB Destination Input].Columns[FullName]"
                       cachedDataType="wstr"
-                      cachedLength="37"
+                      cachedLength="154"
                       cachedName="FullName"
                       externalMetadataColumnId="Package\Upload Data\Customer_Followup.Inputs[OLE DB Destination Input].ExternalColumns[FullName]"
                       lineageId="Package\Upload Data\Union All.Outputs[Union All Output 1].Columns[FullName]" />
@@ -674,7 +674,7 @@
                     <externalMetadataColumn
                       refId="Package\Upload Data\Customer_Followup.Inputs[OLE DB Destination Input].ExternalColumns[FullName]"
                       dataType="wstr"
-                      length="100"
+                      length="250"
                       name="FullName" />
                   </externalMetadataColumns>
                 </input>
@@ -716,6 +716,26 @@
                   refId="Package\Upload Data\Middle.Inputs[Derived Column Input]"
                   description="Input to the Derived Column Transformation"
                   name="Derived Column Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Upload Data\Middle.Inputs[Derived Column Input].Columns[FirstName]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="FirstName"
+                      lineageId="Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[FirstName]" />
+                    <inputColumn
+                      refId="Package\Upload Data\Middle.Inputs[Derived Column Input].Columns[MiddleName]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="MiddleName"
+                      lineageId="Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[MiddleName]" />
+                    <inputColumn
+                      refId="Package\Upload Data\Middle.Inputs[Derived Column Input].Columns[LastName]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="LastName"
+                      lineageId="Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[LastName]" />
+                  </inputColumns>
                   <externalMetadataColumns />
                 </input>
               </inputs>
@@ -732,7 +752,7 @@
                       dataType="wstr"
                       errorOrTruncationOperation="Computation"
                       errorRowDisposition="FailComponent"
-                      length="11"
+                      length="105"
                       lineageId="Package\Upload Data\Middle.Outputs[Derived Column Output].Columns[FullNameMiddle]"
                       name="FullNameMiddle"
                       truncationRowDisposition="FailComponent">
@@ -741,13 +761,13 @@
                           containsID="true"
                           dataType="System.String"
                           description="Derived Column Expression"
-                          name="Expression">[REPLACE]("[LastName]+","+[FirstName]+","+[MiddleName]")</property>
+                          name="Expression">#{Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[LastName]} + ", " + #{Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[FirstName]} + ", " + [LEFT](#{Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[MiddleName]},1)</property>
                         <property
                           containsID="true"
                           dataType="System.String"
                           description="Derived Column Friendly Expression"
                           expressionType="Notify"
-                          name="FriendlyExpression">REPLACE("[LastName]+","+[FirstName]+","+[MiddleName]")</property>
+                          name="FriendlyExpression">LastName + ", " + FirstName + ", " + LEFT(MiddleName,1)</property>
                       </properties>
                     </outputColumn>
                   </outputColumns>
@@ -908,6 +928,20 @@
                   refId="Package\Upload Data\NoMiddle.Inputs[Derived Column Input]"
                   description="Input to the Derived Column Transformation"
                   name="Derived Column Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Upload Data\NoMiddle.Inputs[Derived Column Input].Columns[FirstName]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="FirstName"
+                      lineageId="Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[FirstName]" />
+                    <inputColumn
+                      refId="Package\Upload Data\NoMiddle.Inputs[Derived Column Input].Columns[LastName]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="LastName"
+                      lineageId="Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[LastName]" />
+                  </inputColumns>
                   <externalMetadataColumns />
                 </input>
               </inputs>
@@ -924,7 +958,7 @@
                       dataType="wstr"
                       errorOrTruncationOperation="Computation"
                       errorRowDisposition="FailComponent"
-                      length="23"
+                      length="102"
                       lineageId="Package\Upload Data\NoMiddle.Outputs[Derived Column Output].Columns[FullNameNoMiddle]"
                       name="FullNameNoMiddle"
                       truncationRowDisposition="FailComponent">
@@ -933,13 +967,13 @@
                           containsID="true"
                           dataType="System.String"
                           description="Derived Column Expression"
-                          name="Expression">"[LastName], [FirstName]"</property>
+                          name="Expression">#{Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[LastName]} + ", " + #{Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[FirstName]}</property>
                         <property
                           containsID="true"
                           dataType="System.String"
                           description="Derived Column Friendly Expression"
                           expressionType="Notify"
-                          name="FriendlyExpression">"[LastName], [FirstName]"</property>
+                          name="FriendlyExpression">LastName + ", " + FirstName</property>
                       </properties>
                     </outputColumn>
                   </outputColumns>
@@ -1097,7 +1131,100 @@
               version="1">
               <inputs>
                 <input
+                  refId="Package\Upload Data\Union All.Inputs[Union All Input 3]"
+                  hasSideEffects="true"
+                  name="Union All Input 3">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Upload Data\Union All.Inputs[Union All Input 3].Columns[Title]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="Title"
+                      lineageId="Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[Title]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Upload Data\Union All.Outputs[Union All Output 1].Columns[Title]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Upload Data\Union All.Inputs[Union All Input 3].Columns[FirstName]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="FirstName"
+                      lineageId="Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[FirstName]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Upload Data\Union All.Outputs[Union All Output 1].Columns[FirstName]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Upload Data\Union All.Inputs[Union All Input 3].Columns[MiddleName]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="MiddleName"
+                      lineageId="Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[MiddleName]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Upload Data\Union All.Outputs[Union All Output 1].Columns[MiddleName]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Upload Data\Union All.Inputs[Union All Input 3].Columns[LastName]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="LastName"
+                      lineageId="Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[LastName]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Upload Data\Union All.Outputs[Union All Output 1].Columns[LastName]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Upload Data\Union All.Inputs[Union All Input 3].Columns[Suffix]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="Suffix"
+                      lineageId="Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[Suffix]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Upload Data\Union All.Outputs[Union All Output 1].Columns[Suffix]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Upload Data\Union All.Inputs[Union All Input 3].Columns[FullNameNoMiddle]"
+                      cachedDataType="wstr"
+                      cachedLength="102"
+                      cachedName="FullNameNoMiddle"
+                      lineageId="Package\Upload Data\NoMiddle.Outputs[Derived Column Output].Columns[FullNameNoMiddle]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Upload Data\Union All.Outputs[Union All Output 1].Columns[FullName]}</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+                <input
                   refId="Package\Upload Data\Union All.Inputs[Union All Input 1]"
+                  hasSideEffects="true"
                   name="Union All Input 1">
                   <inputColumns>
                     <inputColumn
@@ -1171,101 +1298,9 @@
                       </properties>
                     </inputColumn>
                     <inputColumn
-                      refId="Package\Upload Data\Union All.Inputs[Union All Input 1].Columns[FullNameNoMiddle]"
+                      refId="Package\Upload Data\Union All.Inputs[Union All Input 1].Columns[FullNameMiddle]"
                       cachedDataType="wstr"
-                      cachedLength="23"
-                      cachedName="FullNameNoMiddle"
-                      lineageId="Package\Upload Data\NoMiddle.Outputs[Derived Column Output].Columns[FullNameNoMiddle]">
-                      <properties>
-                        <property
-                          containsID="true"
-                          dataType="System.Int32"
-                          description="Output column lineage ID"
-                          name="OutputColumnLineageID">#{Package\Upload Data\Union All.Outputs[Union All Output 1].Columns[FullName]}</property>
-                      </properties>
-                    </inputColumn>
-                  </inputColumns>
-                  <externalMetadataColumns />
-                </input>
-                <input
-                  refId="Package\Upload Data\Union All.Inputs[Union All Input 2]"
-                  hasSideEffects="true"
-                  name="Union All Input 2">
-                  <inputColumns>
-                    <inputColumn
-                      refId="Package\Upload Data\Union All.Inputs[Union All Input 2].Columns[Title]"
-                      cachedDataType="wstr"
-                      cachedLength="50"
-                      cachedName="Title"
-                      lineageId="Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[Title]">
-                      <properties>
-                        <property
-                          containsID="true"
-                          dataType="System.Int32"
-                          description="Output column lineage ID"
-                          name="OutputColumnLineageID">#{Package\Upload Data\Union All.Outputs[Union All Output 1].Columns[Title]}</property>
-                      </properties>
-                    </inputColumn>
-                    <inputColumn
-                      refId="Package\Upload Data\Union All.Inputs[Union All Input 2].Columns[FirstName]"
-                      cachedDataType="wstr"
-                      cachedLength="50"
-                      cachedName="FirstName"
-                      lineageId="Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[FirstName]">
-                      <properties>
-                        <property
-                          containsID="true"
-                          dataType="System.Int32"
-                          description="Output column lineage ID"
-                          name="OutputColumnLineageID">#{Package\Upload Data\Union All.Outputs[Union All Output 1].Columns[FirstName]}</property>
-                      </properties>
-                    </inputColumn>
-                    <inputColumn
-                      refId="Package\Upload Data\Union All.Inputs[Union All Input 2].Columns[MiddleName]"
-                      cachedDataType="wstr"
-                      cachedLength="50"
-                      cachedName="MiddleName"
-                      lineageId="Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[MiddleName]">
-                      <properties>
-                        <property
-                          containsID="true"
-                          dataType="System.Int32"
-                          description="Output column lineage ID"
-                          name="OutputColumnLineageID">#{Package\Upload Data\Union All.Outputs[Union All Output 1].Columns[MiddleName]}</property>
-                      </properties>
-                    </inputColumn>
-                    <inputColumn
-                      refId="Package\Upload Data\Union All.Inputs[Union All Input 2].Columns[LastName]"
-                      cachedDataType="wstr"
-                      cachedLength="50"
-                      cachedName="LastName"
-                      lineageId="Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[LastName]">
-                      <properties>
-                        <property
-                          containsID="true"
-                          dataType="System.Int32"
-                          description="Output column lineage ID"
-                          name="OutputColumnLineageID">#{Package\Upload Data\Union All.Outputs[Union All Output 1].Columns[LastName]}</property>
-                      </properties>
-                    </inputColumn>
-                    <inputColumn
-                      refId="Package\Upload Data\Union All.Inputs[Union All Input 2].Columns[Suffix]"
-                      cachedDataType="wstr"
-                      cachedLength="50"
-                      cachedName="Suffix"
-                      lineageId="Package\Upload Data\CSV File Drop.Outputs[Flat File Source Output].Columns[Suffix]">
-                      <properties>
-                        <property
-                          containsID="true"
-                          dataType="System.Int32"
-                          description="Output column lineage ID"
-                          name="OutputColumnLineageID">#{Package\Upload Data\Union All.Outputs[Union All Output 1].Columns[Suffix]}</property>
-                      </properties>
-                    </inputColumn>
-                    <inputColumn
-                      refId="Package\Upload Data\Union All.Inputs[Union All Input 2].Columns[FullNameMiddle]"
-                      cachedDataType="wstr"
-                      cachedLength="11"
+                      cachedLength="105"
                       cachedName="FullNameMiddle"
                       lineageId="Package\Upload Data\Middle.Outputs[Derived Column Output].Columns[FullNameMiddle]">
                       <properties>
@@ -1280,10 +1315,10 @@
                   <externalMetadataColumns />
                 </input>
                 <input
-                  refId="Package\Upload Data\Union All.Inputs[Union All Input 3]"
+                  refId="Package\Upload Data\Union All.Inputs[Union All Input 2]"
                   dangling="true"
                   hasSideEffects="true"
-                  name="Union All Input 3">
+                  name="Union All Input 2">
                   <externalMetadataColumns />
                 </input>
               </inputs>
@@ -1325,7 +1360,7 @@
                     <outputColumn
                       refId="Package\Upload Data\Union All.Outputs[Union All Output 1].Columns[FullName]"
                       dataType="wstr"
-                      length="37"
+                      length="154"
                       lineageId="Package\Upload Data\Union All.Outputs[Union All Output 1].Columns[FullName]"
                       name="FullName" />
                   </outputColumns>
@@ -1337,12 +1372,12 @@
           <paths>
             <path
               refId="Package\Upload Data.Paths[Derived Column Output]"
-              endId="Package\Upload Data\Union All.Inputs[Union All Input 1]"
+              endId="Package\Upload Data\Union All.Inputs[Union All Input 3]"
               name="Derived Column Output"
               startId="Package\Upload Data\NoMiddle.Outputs[Derived Column Output]" />
             <path
               refId="Package\Upload Data.Paths[Derived Column Output1]"
-              endId="Package\Upload Data\Union All.Inputs[Union All Input 2]"
+              endId="Package\Upload Data\Union All.Inputs[Union All Input 1]"
               name="Derived Column Output"
               startId="Package\Upload Data\Middle.Outputs[Derived Column Output]" />
             <path
@@ -1551,7 +1586,7 @@
         <NodeLayout
           Size="131,42"
           Id="Package\Upload Data\Suffix Split"
-          TopLeft="886,282" />
+          TopLeft="891,333" />
         <NodeLayout
           Size="112,42"
           Id="Package\Upload Data\Middle"
@@ -1561,163 +1596,39 @@
           Id="Package\Upload Data\CSV File Drop"
           TopLeft="876,51" />
         <EdgeLayout
-          Id="Package\Upload Data.Paths[Union All Output 1]"
-          TopLeft="1394.5,783">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="-139,53"
-              Start="0,0"
-              End="-139,45.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,22.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,22.5"
-                    Point2="0,26.5"
-                    Point3="-4,26.5" />
-                  <mssgle:LineSegment
-                    End="-135,26.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="-135,26.5"
-                    Point2="-139,26.5"
-                    Point3="-139,30.5" />
-                  <mssgle:LineSegment
-                    End="-139,45.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
           Id="Package\Upload Data.Paths[No Suffix]"
-          TopLeft="931,324">
+          TopLeft="936,375">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="-324,446"
+              EndConnector="-329,395"
               Start="0,0"
-              End="-324,438.5">
+              End="-329,387.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,177.628959276018" />
+                    End="0,156.859728506787" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,177.628959276018"
-                    Point2="0,181.628959276018"
-                    Point3="-4,181.628959276018" />
+                    Point1="0,156.859728506787"
+                    Point2="0,160.859728506787"
+                    Point3="-4,160.859728506787" />
                   <mssgle:LineSegment
-                    End="-320,181.628959276018" />
+                    End="-325,160.859728506787" />
                   <mssgle:CubicBezierSegment
-                    Point1="-320,181.628959276018"
-                    Point2="-324,181.628959276018"
-                    Point3="-324,185.628959276018" />
+                    Point1="-325,160.859728506787"
+                    Point2="-329,160.859728506787"
+                    Point3="-329,164.859728506787" />
                   <mssgle:LineSegment
-                    End="-324,438.5" />
+                    End="-329,387.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="-182.59751953125,186.628959276018,41.1950390625,9.7978515625"
+              BoundingBox="-185.09751953125,165.859728506787,41.1950390625,9.7978515625"
               RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Upload Data.Paths[Flat File Source Output]"
-          TopLeft="951,93">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,189"
-              Start="0,0"
-              End="0,181.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,181.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Upload Data.Paths[Derived Column Output1]"
-          TopLeft="1345,606">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="68.6666666666667,135"
-              Start="0,0"
-              End="68.6666666666667,127.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,75.9598715890851" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,75.9598715890851"
-                    Point2="0,79.9598715890851"
-                    Point3="4,79.9598715890851" />
-                  <mssgle:LineSegment
-                    End="64.6666666666667,79.9598715890851" />
-                  <mssgle:CubicBezierSegment
-                    Point1="64.6666666666667,79.9598715890851"
-                    Point2="68.6666666666667,79.9598715890851"
-                    Point3="68.6666666666667,83.9598715890851" />
-                  <mssgle:LineSegment
-                    End="68.6666666666667,127.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Upload Data.Paths[Derived Column Output]"
-          TopLeft="1269,685">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="125.5,56"
-              Start="0,0"
-              End="125.5,48.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,24" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,24"
-                    Point2="0,28"
-                    Point3="4,28" />
-                  <mssgle:LineSegment
-                    End="121.5,28" />
-                  <mssgle:CubicBezierSegment
-                    Point1="121.5,28"
-                    Point2="125.5,28"
-                    Point3="125.5,32" />
-                  <mssgle:LineSegment
-                    End="125.5,48.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <NodeLayout
@@ -1726,37 +1637,37 @@
           TopLeft="1214,436" />
         <EdgeLayout
           Id="Package\Upload Data.Paths[Suffix]"
-          TopLeft="972,324">
+          TopLeft="977,375">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="312.5,112"
+              EndConnector="307.5,61"
               Start="0,0"
-              End="312.5,104.5">
+              End="307.5,53.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,41.6108597285068" />
+                    End="0,20.841628959276" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,41.6108597285068"
-                    Point2="0,45.6108597285068"
-                    Point3="4,45.6108597285068" />
+                    Point1="0,20.841628959276"
+                    Point2="0,24.841628959276"
+                    Point3="4,24.841628959276" />
                   <mssgle:LineSegment
-                    End="308.5,45.6108597285068" />
+                    End="303.5,24.841628959276" />
                   <mssgle:CubicBezierSegment
-                    Point1="308.5,45.6108597285068"
-                    Point2="312.5,45.6108597285068"
-                    Point3="312.5,49.6108597285068" />
+                    Point1="303.5,24.841628959276"
+                    Point2="307.5,24.841628959276"
+                    Point3="307.5,28.841628959276" />
                   <mssgle:LineSegment
-                    End="312.5,104.5" />
+                    End="307.5,53.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="143.08681640625,50.6108597285068,26.3263671875,9.7978515625"
+              BoundingBox="140.58681640625,29.841628959276,26.3263671875,9.7978515625"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
@@ -1818,6 +1729,130 @@
             <mssgm:EdgeLabel
               BoundingBox="4.36031901041663,39.9789621318373,29.6126953125,9.7490234375"
               RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Upload Data.Paths[Derived Column Output]"
+          TopLeft="1269,685">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="125.5,56"
+              Start="0,0"
+              End="125.5,48.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24"
+                    Point2="0,28"
+                    Point3="4,28" />
+                  <mssgle:LineSegment
+                    End="121.5,28" />
+                  <mssgle:CubicBezierSegment
+                    Point1="121.5,28"
+                    Point2="125.5,28"
+                    Point3="125.5,32" />
+                  <mssgle:LineSegment
+                    End="125.5,48.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Upload Data.Paths[Derived Column Output1]"
+          TopLeft="1345,606">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="68.6666666666667,135"
+              Start="0,0"
+              End="68.6666666666667,127.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,75.9598715890851" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,75.9598715890851"
+                    Point2="0,79.9598715890851"
+                    Point3="4,79.9598715890851" />
+                  <mssgle:LineSegment
+                    End="64.6666666666667,79.9598715890851" />
+                  <mssgle:CubicBezierSegment
+                    Point1="64.6666666666667,79.9598715890851"
+                    Point2="68.6666666666667,79.9598715890851"
+                    Point3="68.6666666666667,83.9598715890851" />
+                  <mssgle:LineSegment
+                    End="68.6666666666667,127.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Upload Data.Paths[Union All Output 1]"
+          TopLeft="1394.5,783">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-139,53"
+              Start="0,0"
+              End="-139,45.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,22.5"
+                    Point2="0,26.5"
+                    Point3="-4,26.5" />
+                  <mssgle:LineSegment
+                    End="-135,26.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-135,26.5"
+                    Point2="-139,26.5"
+                    Point3="-139,30.5" />
+                  <mssgle:LineSegment
+                    End="-139,45.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Upload Data.Paths[Flat File Source Output]"
+          TopLeft="953.5,93">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,240"
+              Start="0,0"
+              End="0,232.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,232.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
